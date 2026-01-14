@@ -1,15 +1,15 @@
 package tests;
 
-import base.BaseTest;
 import io.restassured.http.ContentType;
 import org.testng.annotations.Test;
+import utils.RequestSpec;
 import utils.TestDataGenerator;
 import utils.TokenManager;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-public class UserApiTest extends BaseTest {
+public class UserApiTest {
 
     private int userId;
     private int postId;
@@ -21,8 +21,7 @@ public class UserApiTest extends BaseTest {
     public void createUser() {
         userId =
                 given()
-                        .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
-                        .contentType(ContentType.JSON)
+                        .spec(RequestSpec.spec())
                         .body(TestDataGenerator.newUser())
                 .when()
                         .post("/users")
@@ -39,8 +38,7 @@ public class UserApiTest extends BaseTest {
     @Test(priority = 2)
     public void updateUser() {
         given()
-                .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
-                .contentType(ContentType.JSON)
+                .spec(RequestSpec.spec())
                 .body("{\"name\":\"Johanes Paulus Updated\"}")
                 .when()
                 .put("/users/" + userId)
@@ -54,8 +52,7 @@ public class UserApiTest extends BaseTest {
     public void createPost() {
         postId =
                 given()
-                        .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
-                        .contentType(ContentType.JSON)
+                        .spec(RequestSpec.spec())
                         .body(TestDataGenerator.newPost(userId))
                         .when()
                         .post("/posts")
@@ -73,8 +70,7 @@ public class UserApiTest extends BaseTest {
     public void createTodo() {
         todoId =
                 given()
-                        .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
-                        .contentType(ContentType.JSON)
+                        .spec(RequestSpec.spec())
                         .body(TestDataGenerator.newTodo(userId))
                 .when()
                         .post("/todos")
@@ -92,7 +88,7 @@ public class UserApiTest extends BaseTest {
     public void createComment() {
         commentId =
                 given()
-                        .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
+                        .spec(RequestSpec.spec())
                         .contentType(ContentType.JSON)
                         .body(TestDataGenerator.newComment(postId))
                 .when()
@@ -112,7 +108,7 @@ public class UserApiTest extends BaseTest {
 
         // GET USER
         given()
-                .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
+                .spec(RequestSpec.spec())
             .when()
                 .get("/users/" + userId)
             .then()
@@ -121,7 +117,7 @@ public class UserApiTest extends BaseTest {
 
         // GET POST
         given()
-                .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
+                .spec(RequestSpec.spec())
             .when()
                 .get("/posts/" + postId)
                 .then()
@@ -130,7 +126,7 @@ public class UserApiTest extends BaseTest {
 
         // GET COMMENT
         given()
-                .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
+                .spec(RequestSpec.spec())
             .when()
                 .get("/comments/" + commentId)
             .then()
@@ -140,7 +136,7 @@ public class UserApiTest extends BaseTest {
         // GET TODO
         given()
                 .log().all()
-                .header("Authorization", "Bearer " + TokenManager.ACCESS_TOKEN)
+                .spec(RequestSpec.spec())
             .when()
                 .get("/todos/" + todoId)
             .then()

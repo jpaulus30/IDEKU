@@ -1,6 +1,21 @@
 package utils;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class TokenManager {
 
-    public static final String ACCESS_TOKEN = "2d2d79123654c8e43d886399c8d3a8adb10eb2a693d3e608466c6244bf3f2503";
+    private static final Dotenv dotenv = Dotenv.configure()
+            .ignoreIfMissing()
+            .load();
+
+    public static String getToken() {
+        String token = dotenv.get("GOREST_TOKEN");
+
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException(
+                    "GOREST_TOKEN is missing. Please check .env or environment variable."
+            );
+        }
+        return token;
+    }
 }
